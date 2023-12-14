@@ -1,14 +1,22 @@
 #########            ENFERMEDAD AUTOINMUNE / SARS-COV-2       #################
 
-rm(list = ls())
+# Para saber en qué directorio estoy trabajando 
+getwd()
+
+#Para cambiar la ubicación del directorio a la carpeta donqe quiero guardar 
+#usar: setwd("ubicación destino").
+setwd("C:/Users/Ana Milena/OneDrive/Escritorio/AGORA/RSL LONG covid")
+
+#Para instalar y Cargar las librerias que se requieran 
+#1
+install.packages("magrittr") 
+install.packages("dplyr") 
+#2
 library(magrittr) 
 library(dplyr) 
 library(meta)
 library(metafor)
 library(readxl)
-
-dat <- read_excel("data/")
-
 
 #Para cambiar valores especificos de una columna del dataframe 
 #Usar: objeto[#fila,#columna] <- "nuevo valor"
@@ -34,7 +42,7 @@ rm(Diabetes_mellitus_1PI)
 library(readxl)
 
 #Para que lea elarchivo 
-Formulario_ext <- read_excel("Formulario_ext.xlsx")
+Formulario_ext <- read_excel("C:/Users/Ana Milena/OneDrive/Escritorio/AGORA/RSL LONG covid/R/Formulario_ext.xlsx")
 
 #Para explorar la estructura del data frame usar: str(objeto)
 str(Formulario_ext)
