@@ -161,8 +161,6 @@ metabin(Vasculitis$Events_E, Vasculitis$Included_E, Vasculitis$Events_C, Vasculi
 #15  Artritis reumatoide
 metabin(RA$Events_E, RA$Included_E, RA$Events_C, RA$Included_C, EB=RA, sm="RR", method="MH", studlab=paste(RA$ID_study), comb.fixed = T,comb.random = T)
 
-#17  ATD
-metabin(ATD$Events_E, ATD$Included_E, ATD$Events_C, ATD$Included_C, EB=ATD, sm="RR", method="MH", studlab=paste(ATD$ID_study), comb.fixed = T,comb.random = T)
 
 
 ##Metanálisis incluyendo casos con medicación
