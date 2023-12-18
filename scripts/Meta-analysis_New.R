@@ -75,9 +75,6 @@ Vasculitis=subset(Formulario_ext,Outcome_ag=="Vasculitis")
 RA=subset(Formulario_ext,Outcome_ag=="Rheumatoid arthritis")
 ATD=subset(Formulario_ext,Outcome_ag=="Autoimmune Thyroid Disease")
 
-#Modificar DF diabetes excluyendo el estudio de Zareini pq no se conoce el N
-DMT1=subset(DMT1,!(ID_study =="Zareini, 2023"))
-
 #Modificar DF Guillain Barré el estudio de Xu pq no se conoce el # de eventos por grupo
 Guillain_Barré=subset(Guillain_Barré,!(ID_study =="Xu, 2022"))
 
@@ -332,4 +329,6 @@ metabin(Vasculitis_m$Events_E, Vasculitis_m$Included_E, Vasculitis_m$Events_C, V
 #6  Artritis reumatoide
 metabin(RA_m$Events_E, RA_m$Included_E, RA_m$Events_C, RA_m$Included_C, EB=RA_m, sm="RR", method="MH", studlab=paste(RA_m$ID_study), comb.fixed = T,comb.random = T)
 
+
+rm(DMT1) 
 
