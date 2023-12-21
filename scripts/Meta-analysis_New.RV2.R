@@ -1,4 +1,3 @@
-
 #########            ENFERMEDAD AUTOINMUNE / SARS-COV-2       #################
 
 
@@ -15,6 +14,8 @@ library(cowplot)
 #################Crear un df igual a la base en excel ##########################
 ################################################################################
 Formulario_ext <- read_excel("data/Formulario_ext.xlsx")
+Formulario_ext <- read_excel("C:/Users/Ana Milena/OneDrive/Escritorio/AGORA/RSL LONG covid/R/autoimmune-after-covid/data/Formulario_ext.xlsx")
+
 
 ######################### REVISION DEL df #####################################
 ################################################################################
@@ -182,9 +183,21 @@ Data_g <- Data_g[order(Data_g$ID_forrest), ]
 Data_g$Index <- seq_len(nrow(Data_g))
 
 #Crear un nuevo data frame por tipo de metrica 
-DataHR=subset(Data_g,Association_measure=="Hazard Ratio (HR)")
-DataIRR=subset(Data_g,Association_measure=="Incidence Rate Ratios (IRR)")
+DataHR=subset(Data_g,Association_measure=="HR")
+DataHR$Index <- seq_len(nrow(DataHR))
+DataIRR=subset(Data_g,Association_measure=="IRR")
+DataIRR$Index <- seq_len(nrow(DataIRR))
 
+# str(Data_g)
+# names(Data_g)
+# Data_g$Outcome_rep
+# Data_g[4,4] <- "Giant cell arteritis"
+# Data_g[46,4] <- "Granulomatosis with polyangiitis"
+# Data_g[2,4] <- "Spondyloarthritis"
+
+Data_g$Outcome_rep[Data_g$Outcome_rep == "Arteritis temporalis"] <- "Giant cell arteritis"
+Data_g$Outcome_rep[Data_g$Outcome_rep == "Wegener’s disease"] <- "Granulomatosis with polyangiitis"
+Data_g$Outcome_rep[Data_g$Outcome_rep == "Ankylosing spondylitis"] <- "Spondyloarthritis"
 
 ###################Forrest plot resultados descriptivos########################
 
@@ -242,6 +255,7 @@ CI_conc <- table_base +
 ## Merge tables with plot
 lay <-  matrix(c(1,1,1,1,1,1,1,1,1,1,2,3,3), nrow = 1)
 grid.arrange(Descriptivos, Efecto, CI_conc, layout_matrix = lay)
+
 
 #Grafica resultados HR
 
@@ -360,104 +374,4 @@ grid.arrange(plot2, EfectoIRR, CI_concIRR, layout_matrix = lay)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-# FIN ################################################################################
-################################################################################
-################################################################################
-
-#ANÁLISIS NO INCLUIDOs EN EL ARTICULO
-##Metanálisis incluyendo casos con medicación del estudio de tesch
-#1 Crear una copia de los DF que incluyan los casos con medicación del estudio de tesh 
-RA_m <- RA
-Behcet_m <- Behcet
-IBD_m <- IBD
-ADNS_m <- ADNS
-Spondyloarthritis_m <- Spondyloarthritis
-SLE_m <- SLE
-Polymyalgia_m <- Polymyalgia
-Psoriasis_m <- Psoriasis
-Sjögrens_m <- Sjögrens
-Vasculitis_m <- Vasculitis
-
-#2 Cambiar los valores correspondientes a las variables de resultado
-#Para saber el numero de fila que se desea modificar en cada DF
-names(RA_m)
-names(Psoriasis_m)
-#etc
-
-#3 Modificar los valores
-
-# Valores que deseas asignar a la fila 2
-valores_RA_m <- list(Events_E = 611, Events_C = 421, Incidence_E = 1.26, Incidence_C = 0.87, Est_a = 1.45, CI_La = 1.28, CI_Ua = 1.64)
-
-# Asignar los nuevos valores a la fila 2 en las columnas correspondientes
-RA_m[2, c("Events_E", "Events_C", "Incidence_E", "Incidence_C", "Est_a", "CI_La", "CI_Ua")] <- valores_RA_m
-
-valores_Psoriasis_m <- list(Events_E = 611, Events_C = 421, Incidence_E = 1.26, Incidence_C = 0.87, Est_a = 1.45, CI_La = 1.28, CI_Ua = 1.64)
-Psoriasis_m[2, c("Events_E", "Events_C", "Incidence_E", "Incidence_C", "Est_a", "CI_La", "CI_Ua")] <- valores_Psoriasis_m
-
-valores_Sjögrens_m <- list(Events_E = 611, Events_C = 421, Incidence_E = 1.26, Incidence_C = 0.87, Est_a = 1.45, CI_La = 1.28, CI_Ua = 1.64)
-Sjögrens_m[2, c("Events_E", "Events_C", "Incidence_E", "Incidence_C", "Est_a", "CI_La", "CI_Ua")] <- valores_Sjögrens_m
-
-valores_Polymyalgia_m <- list(Events_E = 611, Events_C = 421, Incidence_E = 1.26, Incidence_C = 0.87, Est_a = 1.45, CI_La = 1.28, CI_Ua = 1.64)
-Polymyalgia_m[2, c("Events_E", "Events_C", "Incidence_E", "Incidence_C", "Est_a", "CI_La", "CI_Ua")] <- valores_Polymyalgia_m
-
-valores_Spondyloarthritis_m <- list(Events_E = 611, Events_C = 421, Incidence_E = 1.26, Incidence_C = 0.87, Est_a = 1.45, CI_La = 1.28, CI_Ua = 1.64)
-Spondyloarthritis_m[2, c("Events_E", "Events_C", "Incidence_E", "Incidence_C", "Est_a", "CI_La", "CI_Ua")] <- valores_Spondyloarthritis_m
-
-valores_SLE_m <- list(Events_E = 611, Events_C = 421, Incidence_E = 1.26, Incidence_C = 0.87, Est_a = 1.45, CI_La = 1.28, CI_Ua = 1.64)
-SLE_m[2, c("Events_E", "Events_C", "Incidence_E", "Incidence_C", "Est_a", "CI_La", "CI_Ua")] <- valores_SLE_m
-
-valores_IBD_m2 <- list(Events_E = 611, Events_C = 421, Incidence_E = 1.26, Incidence_C = 0.87, Est_a = 1.45, CI_La = 1.28, CI_Ua = 1.64)
-IBD_m[2, c("Events_E", "Events_C", "Incidence_E", "Incidence_C", "Est_a", "CI_La", "CI_Ua")] <- valores_IBD_m2
-
-valores_IBD_m3 <- list(Events_E = 611, Events_C = 421, Incidence_E = 1.26, Incidence_C = 0.87, Est_a = 1.45, CI_La = 1.28, CI_Ua = 1.64)
-IBD_m[3, c("Events_E", "Events_C", "Incidence_E", "Incidence_C", "Est_a", "CI_La", "CI_Ua")] <- valores_IBD_m3
-
-valores_Vasculitis_m2 <- list(Events_E = 611, Events_C = 421, Incidence_E = 1.26, Incidence_C = 0.87, Est_a = 1.45, CI_La = 1.28, CI_Ua = 1.64)
-Vasculitis_m[2, c("Events_E", "Events_C", "Incidence_E", "Incidence_C", "Est_a", "CI_La", "CI_Ua")] <- valores_Vasculitis_m2
-
-valores_Vasculitis_m3 <- list(Events_E = 611, Events_C = 421, Incidence_E = 1.26, Incidence_C = 0.87, Est_a = 1.45, CI_La = 1.28, CI_Ua = 1.64)
-Vasculitis_m[3, c("Events_E", "Events_C", "Incidence_E", "Incidence_C", "Est_a", "CI_La", "CI_Ua")] <- valores_Vasculitis_m3
-
-
-#Metanálisis de efectos aleatorios por enfermedad inclyedo casos con medicación del estudio de Tesh 
-#ANÁLISIS NO INCLUIDO EN EL ARTICULO
-
-#2   Espondiloartritis ="Espondiloartritis"
-metabin(Spondyloarthritis_m$Events_E, Spondyloarthritis_m$Included_E, Spondyloarthritis_m$Events_C, Spondyloarthritis_m$Included_C, EB=Spondyloarthritis_m, sm="RR", method="MH", studlab=paste(Spondyloarthritis_m$ID_study), comb.fixed = T,comb.random = T)
-
-#5   EII="Enfermedad inflamatoria intestinal"
-metabin(IBD_m$Events_E, IBD_m$Included_E, IBD_m$Events_C, IBD_m$Included_C, EB=IBD_m, sm="RR", method="MH", studlab=paste(IBD_m$ID_study), comb.fixed = T,comb.random = T)
-
-#1  LES="Lupus eritematoso sistémico"
-metabin(SLE_m$Events_E, SLE_m$Included_E, SLE_m$Events_C, SLE_m$Included_C, EB=SLE_m, sm="RR", method="MH", studlab=paste(SLE_m$ID_study), comb.fixed = T,comb.random = T)
-
-#2  Polimialgia_reumática="Polimialgia reumática"
-metabin(Polymyalgia_m$Events_E, Polymyalgia_m$Included_E, Polymyalgia_m$Events_C, Polymyalgia_m$Included_C, EB=Polymyalgia_m, sm="RR", method="MH", studlab=paste(Polymyalgia_m$ID_study), comb.fixed = T,comb.random = T)
-
-#3  Psoriasis="Psoriasis"
-metabin(Psoriasis_m$Events_E, Psoriasis_m$Included_E, Psoriasis_m$Events_C, Psoriasis_m$Included_C, EB=Psoriasis_m, sm="RR", method="MH", studlab=paste(Psoriasis_m$ID_study), comb.fixed = T,comb.random = T)
-
-#4  Sjögrens="Sjögren's syndrome"
-metabin(Sjögrens_m$Events_E, Sjögrens_m$Included_E, Sjögrens_m$Events_C, Sjögrens_m$Included_C, EB=Sjögrens_m, sm="RR", method="MH", studlab=paste(Sjögrens_m$ID_study), comb.fixed = T,comb.random = T)
-
-#5  Vasculitis
-metabin(Vasculitis_m$Events_E, Vasculitis_m$Included_E, Vasculitis_m$Events_C, Vasculitis_m$Included_C, EB=Vasculitis_m, sm="RR", method="MH", studlab=paste(Vasculitis_m$ID_study), comb.fixed = T,comb.random = T)
-
-#6  Artritis reumatoide
-metabin(RA_m$Events_E, RA_m$Included_E, RA_m$Events_C, RA_m$Included_C, EB=RA_m, sm="RR", method="MH", studlab=paste(RA_m$ID_study), comb.fixed = T,comb.random = T)
-
-
-rm(DMT1) 
 
