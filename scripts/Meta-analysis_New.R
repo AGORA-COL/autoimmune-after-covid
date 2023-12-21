@@ -31,13 +31,20 @@ Formulario_ext$Incidence_C <-  as.numeric(Formulario_ext$Incidence_C)
 Formulario_ext$Est_crude <-  as.numeric(Formulario_ext$Est_crude)
 Formulario_ext$CI_L <-  as.numeric(Formulario_ext$CI_L)
 Formulario_ext$CI_U <-  as.numeric(Formulario_ext$CI_U)
+Formulario_ext$Est_a <-  as.numeric(Formulario_ext$Est_a)
+Formulario_ext$CI_La <-  as.numeric(Formulario_ext$CI_La)
+Formulario_ext$CI_Ua <-  as.numeric(Formulario_ext$CI_Ua)
+Formulario_ext$Events_E <-  as.numeric(Formulario_ext$Events_E)
+Formulario_ext$Events_C <-  as.numeric(Formulario_ext$Events_C)
+Formulario_ext$Included_E <-  as.numeric(Formulario_ext$Included_E)
+Formulario_ext$Included_C <-  as.numeric(Formulario_ext$Included_C)
 
 #Para comprobar el cambio (explorar la estructura del data frame)
 str(Formulario_ext)
 
 #Para ver los nombres de las columnas y los valores del dataframe y modificar si aplica
 names(Formulario_ext)
-Formulario_ext$Outvome_ag
+Formulario_ext$Outcome_ag
 
 ################# Incidencia acumulada por desenlace ##########################
 ################################################################################
@@ -59,26 +66,25 @@ tabla
 #Crear los DF 
 #USar: Columna=subset(DF,condición) (Por outcome especifico)
 
-Spondyloarthritis=subset(Formulario_ext,Outcome_ag=="Ankylosing spondylitis")
+Spondyloarthritis=subset(Formulario_ext,Outcome_ag=="Spondyloarthritis")
 DMT1=subset(Formulario_ext,Outcome_ag=="Type 1 diabetes mellitus")
 DMT1PP=subset(Formulario_ext,Outcome_ag=="Type 1 diabetes mellitus PP")
-IBD=subset(Formulario_ext,Outcome_ag=="Inflammatory Bowel Disease")
-SLE=subset(Formulario_ext,Outcome_ag=="Systemic Lupus Erythematosus")
+IBD=subset(Formulario_ext,Outcome_ag=="Inflammatory bowel disease")
+SLE=subset(Formulario_ext,Outcome_ag=="Systemic lupus erythematosus")
 Polymyalgia=subset(Formulario_ext,Outcome_ag=="Polymyalgia rheumatica")
 Guillain_Barré=subset(Formulario_ext,Outcome_ag=="Guillain-Barré syndrome")
 Behcet=subset(Formulario_ext,Outcome_ag=="Behcet’s disease")
-ADNS=subset(Formulario_ext,Outcome_ag=="Autoimmune Diseases of the Nervous System")
-Systemic_scleroderma=subset(Formulario_ext,Outcome_ag=="Systemic scleroderma")
+Systemic_scleroderma=subset(Formulario_ext,Outcome_ag=="Systemic sclerosis")
 Psoriasis=subset(Formulario_ext,Outcome_ag=="Psoriasis")
 Sjögrens=subset(Formulario_ext,Outcome_ag=="Sjögren's syndrome")
 Vasculitis=subset(Formulario_ext,Outcome_ag=="Vasculitis")
 RA=subset(Formulario_ext,Outcome_ag=="Rheumatoid arthritis")
-ATD=subset(Formulario_ext,Outcome_ag=="Autoimmune Thyroid Disease")
 
 #Modificar DF Guillain Barré el estudio de Xu pq no se conoce el # de eventos por grupo
 Guillain_Barré=subset(Guillain_Barré,!(ID_study =="Xu, 2022"))
 
 #Modificar DF Guillain Barré segun el periodo de seguimiento del estudi de Mizrahi
+Formulario_ext$Comparisons
 SGB2=subset(Guillain_Barré,!(Comparisons =="Covid Vs No covid early phase (30-180 days)"))
 SGB1=subset(Guillain_Barré,!(Comparisons =="Covid Vs No covid late phase (180-360 days)"))
 
@@ -95,12 +101,12 @@ Guillain_Barré_A[1,63] <- 14
 RA=subset(RA,!(ID_study =="Chevinsky, 2021"))
 
 #Modificar DF Vasculitis sumando los eventos de  Giant cell arteritis y Granulomatosis with polyangiitis del estudio de Tesch
-Vasculitis=subset(Vasculitis,!(Outcome_rep =="Giant Cell Arteritis"))
+Vasculitis=subset(Vasculitis,!(Outcome_rep =="Arteritis temporalis"))
 valores_Vasculitis <- list(Events_E = 94, Events_C = 49)
 Vasculitis[2, c("Events_E", "Events_C")] <- valores_Vasculitis
 
 #Modificar DF IBD sumando los eventos de  Crohn’s disease y Ulcerative colitis del estudio de Tesch
-IBD=subset(Vasculitis,!(Outcome_rep =="Ulcerative colitis"))
+IBD=subset(IBD,!(Outcome_rep =="Ulcerative colitis"))
 valores_IBD <- list(Events_E = 665, Events_C = 517)
 IBD[2, c("Events_E", "Events_C")] <- valores_IBD
 
@@ -164,13 +170,10 @@ Data_g <- Formulario_ext[, c("ID_study","Comparisons", "Outcome_ag","Outcome_rep
 Data_g$ID_forrest <- paste(Data_g$Outcome_rep, Data_g$ID_study, sep = " / ")
 ##Concatenar los límites de los intervalos de confianza
 Data_g$IC <- paste(Data_g$CI_La, Data_g$CI_Ua, sep = " - ")
-#Cambiar el ID del estudio de Mizhari para diferenciar los seguimientos
 #Se verifica el numero de fila y columnas que se desean cambiar
 names(Data_g)
+
 Data_g$ID_forrest
-#Modificar los nombre del ID de Mizhari para separar los resultados segun el seguimiento: objeto[#Columna,#Fila] <- "nuevo valor"
-Data_g[14,20] <- "Guillain_Barré / Mizrahi, 2023*"
-Data_g[15,20] <- "Guillain_Barré / Mizrahi, 2023*"
 #Eliminar el registro de Chevisnsky pq no tiene datos
 Data_g=subset(Data_g,!(ID_study =="Chevinsky, 2021"))
 #Ordenar el dt por orden alfabetico segun la condición/estudio
@@ -189,11 +192,11 @@ DataIRR=subset(Data_g,Association_measure=="Incidence Rate Ratios (IRR)")
 
 #plot resultados reportados por decenlace y estuio 
 Descriptivos <- ggplot(Data_g, aes(y = Index, x = Est_a)) +
-  geom_point(aes(color = Data_g$Association_measure), shape = 18, size = 3) +  
+  geom_point(aes(color = Data_g$Association_measure), shape = 18, size = 2.5) +  
   geom_errorbarh(aes(xmin = CI_La, xmax = CI_Ua), height = 0.25) +
   geom_vline(xintercept = 1, color = "red", linetype = "dashed", cex = 1, alpha = 0.5) +
   scale_y_continuous(name = "", breaks = 1:46, labels = Data_g$ID_forrest, trans = "reverse") +
-  xlab("Efect (95% CI)") + 
+  xlab("Effect (95% CI)") + 
   ylab(" ") + 
   theme(panel.border = element_blank(),
         panel.background = element_blank(),
@@ -228,7 +231,7 @@ Efecto <- table_base +
   labs(title = "space") +
   geom_text(aes(y = rev(Index), x = 1, label = sprintf("%0.1f", round(Est_a, digits = 1))), size = 4) +
   theme(plot.title = element_text(face = "bold")) +
-  ggtitle("Efect")
+  ggtitle("Effect")
 
 ## 95% CI table
 CI_conc <- table_base +
@@ -239,6 +242,11 @@ CI_conc <- table_base +
 ## Merge tables with plot
 lay <-  matrix(c(1,1,1,1,1,1,1,1,1,1,2,3,3), nrow = 1)
 grid.arrange(Descriptivos, Efecto, CI_conc, layout_matrix = lay)
+
+
+
+
+
 
 
 
