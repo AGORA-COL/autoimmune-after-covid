@@ -101,6 +101,9 @@ Guillain_Barré_A[1,63] <- 14
 #Modificar DF Artritis excluyendo el estudio de Chevinsky pq no se conoce el # de eventos ni el N
 RA=subset(RA,!(ID_study =="Chevinsky, 2021"))
 
+#Modificar DF diabetes excluyendo el estudio de Zareini pq no se conoce el # total por grupo
+DMT1=subset(DMT1,!(ID_study =="Zareini, 2023"))
+
 #Modificar DF Vasculitis sumando los eventos de  Giant cell arteritis y Granulomatosis with polyangiitis del estudio de Tesch
 Vasculitis=subset(Vasculitis,!(Outcome_rep =="Arteritis temporalis"))
 valores_Vasculitis <- list(Events_E = 94, Events_C = 49)
