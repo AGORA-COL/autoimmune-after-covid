@@ -80,7 +80,7 @@ Sjögrens=subset(Formulario_ext,Outcome_ag=="Sjögren's syndrome")
 Vasculitis=subset(Formulario_ext,Outcome_ag=="Vasculitis")
 RA=subset(Formulario_ext,Outcome_ag=="Rheumatoid arthritis")
 
-#Modificar DF diabetes excluyendo el estudio de Zareini pq no se conoce el # total por grupo
+#Modificar DF diabetes excluyendo el estudio de Zareini pq no se conoce el # total por grupo para el análisis >30 dias
 DMT1=subset(DMT1,!(ID_study =="Zareini, 2023"))
 
 #Modificar DF Guillain Barré el estudio de Xu pq no se conoce el # de eventos por grupo
