@@ -1,5 +1,6 @@
 
-# Risk of new onset of immune-mediated diseases
+# Risk of new onset of immune-mediated diseases 
+
 # after SARS-CoV-2 infection: A Systematic review
 # and meta-analysis.
 
@@ -42,7 +43,7 @@ dat <- dat %>%
 ##============================================================================
 
 datg <- dat[, c("ID_study","Comparisons", "Outcome_ag","Outcome_rep", "Included_E", "Included_C", "Events_E", "Events_C", "Incidence_E", "Incidence_C", "Association_measure", "Est_crude", "CI_L", "CI_U", "Est_a", "CI_La", "CI_Ua", "IA_E", "IA_C")]
-datg <- subset(datg,!(ID_study =="Chevinsky, 2021")) # Removing Chevinsky because XXXX
+datg <- subset(datg,!(ID_study =="Chevinsky, 2021")) # Chevinsky is removed from the analysis as results for rheumatoid arthritis evaluation were not reported
 datg <- datg[order(datg$Outcome_rep), ]
 datg$CI_La <- round(datg$CI_La, 2)
 datg$CI_Ua <- round(datg$CI_La, 2)
@@ -70,8 +71,8 @@ write_excel_csv2(table_2, "results/Table2.xls")
 ##========================== META-ANALYISIS ==================================
 ##============================================================================
 events_more_1study <- dat %>% group_by(Outcome_ag) %>% summarise(n = n()) %>% filter (n> 1)
-# Aquí falta una explicación de porqué se selceccionan 13 desenlaces si de arriba se deriva 
-# que hay 15 desenlaces con >1 estudio
+# Thirteen outcomes were selected. Evidence was found for two nervous system diseases, but both conditions were addressed in the same study; 
+# therefore, they were not statistically combined. The same situation occurred with Autoimmune Thyroid Disease.
 Spondyloarthritis <- subset(dat,Outcome_ag=="Spondyloarthritis")
 DMT1 <- subset(dat,Outcome_ag=="Type 1 diabetes mellitus")
 DMT1PP <- subset(dat,Outcome_ag=="Type 1 diabetes mellitus PP") %>% 
@@ -97,24 +98,26 @@ Guillain_Barré <- subset(Guillain_Barré,!(ID_study =="Xu, 2022"))
 SGB2 <- subset(Guillain_Barré,!(Comparisons =="Covid Vs No covid early phase (30-180 days)"))
 SGB1 <- subset(Guillain_Barré,!(Comparisons =="Covid Vs No covid late phase (180-360 days)"))
 
-# Modificar DF Guillain Barré sumando los eventos de ambos periodos el estudi de Mizrahi
-# Se elimina un registro de mizhari para conservar 1 registro por estudio 
+# Modifying the Guillain-Barré DataFrame by combining events from both periods of the Mizrahi study
+# 1. Removing one Mizrahi record to retain one entry per study 
 Guillain_Barré_A <- subset(Guillain_Barré,!(Comparisons =="Covid Vs No covid late phase (180-360 days)"))
-# Aquí no entiendo la diferencia entre SGB1 y Guillain_Barré_A ------ ZULMA
-
-# se cambian los datos correspondientes a los eventos en cada grupo sumando los eventos de ambos periodos del estudio de Mizrahi
+# 2. Changing the data related to events in each group by aggregating events from both periods of the Mizrahi study
 Guillain_Barré_A[1, "Events_E"] <- 18 
 Guillain_Barré_A[1, "Events_C"] <- 14
+
+# Aquí no entiendo la diferencia entre SGB1 y Guillain_Barré_A ------ ZULMA
+#SGB1 combina los dos estudios que evaluaron guillan barré, incluyendo unicamente el segiuimiento de 30-180 dias del estudio de Mizrahi
+#Dado que se decidió sumar los eventos de ambos periodos del estudio de Mizhari, este análisis no aplica y se pude omitir 
 
 # Excluding Chevinsky, 2021 as  # of events and N is missing
 RA <- subset(RA,!(ID_study =="Chevinsky, 2021"))
 
-# Modificar DF Vasculitis sumando los eventos de  Giant cell arteritis y Granulomatosis with polyangiitis del estudio de Tesch
+# Modifying the Vasculitis DataFrame by aggregating events of Giant Cell Arteritis and Granulomatosis with Polyangiitis from the Tesch study
 Vasculitis <- subset(Vasculitis,!(Outcome_rep =="Arteritis temporalis"))
 valores_Vasculitis <- list(Events_E = 94, Events_C = 49)
 Vasculitis[2, c("Events_E", "Events_C")] <- valores_Vasculitis
 
-# Modificar DF IBD sumando los eventos de  Crohn’s disease y Ulcerative colitis del estudio de Tesch
+# Modifying the Inflammatory Bowel Disease (IBD) DataFrame by aggregating events of Crohn’s disease and Ulcerative colitis from the Tesch study.
 IBD <- subset(IBD,!(Outcome_rep =="Ulcerative colitis"))
 valores_IBD <- list(Events_E = 665, Events_C = 517)
 IBD[2, c("Events_E", "Events_C")] <- valores_IBD
