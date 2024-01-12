@@ -143,9 +143,7 @@ Meta_all <- metabin(event.e = Events_E, n.e = Included_E,
                     event.c = Events_C, n.c = Included_C, data=udat,
                     studlab= ID_study, subgroup = Outcome_ag, sm="RR",
                     method="MH",  common = FALSE, random = TRUE,
-                    label.e = "SARS-CoV-2\nExposed", label.c = "SARS-CoV-2\nNon-Exposed",
-                    label.left = "New Onset",
-                    label.right = "Total\nIncluded"
+                    label.e = "Exposed", label.c = "Non-Exposed", 
                     print.subgroup.name = FALSE,
                     label.right = ""
 )
