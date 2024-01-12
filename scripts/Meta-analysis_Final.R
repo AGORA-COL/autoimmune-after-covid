@@ -120,52 +120,6 @@ valores_IBD <- list(Events_E = 665, Events_C = 517)
 IBD[2, c("Events_E", "Events_C")] <- valores_IBD
 
 
-##============================================================================
-##=================Random Effects Model by Disease ===========================
-##============================================================================
-library(stringr)
-get_meta_by_disease <- function (datd) {
-  Meta_disease <- metabin(data = datd,
-                          event.e = Events_E, n.e = Included_E, 
-                          event.c = Events_C, n.c = Included_C,  
-                          studlab= ID_study, sm="RR", 
-                          method="MH",  common = FALSE, random = TRUE, 
-                          label.e = "Exposed", label.c = "Non-Exposed")
-  size_plot <- length(datd$ID_study)
-  title_plot <- str_wrap(unique(datd$Outcome_ag), 20)
-  print(title_plot)
-  png(paste0("results/Meta-",title_plot, ".png"), width = 600*2, height = 110*size_plot, 
-      units = "px", res = 100)  
-  forest.meta(x = Meta_disease,  
-              col.square = "grey60", 
-              col.square.lines = "black",
-              col.diamond = "steelblue",
-              header.line = "both",
-              fontsize = 15,
-              xlim = c(0.2, 10),
-              # label.right = "Risk Factor",
-              # label.left =  "Protector Factor",
-              smlab = title_plot)
-  dev.off()
-  
-}
-
-
-get_meta_by_disease(datd = Behcet)
-get_meta_by_disease(datd = DMT1)
-get_meta_by_disease(datd = DMT1PP)
-get_meta_by_disease(datd = IBD)
-get_meta_by_disease(datd = Guillain_Barré)
-get_meta_by_disease(datd = Polymyalgia)
-get_meta_by_disease(datd = Psoriasis)
-get_meta_by_disease(datd = RA)
-get_meta_by_disease(datd = SLE)
-get_meta_by_disease(datd = Sjögrens)
-get_meta_by_disease(datd = Spondyloarthritis)
-get_meta_by_disease(datd = Systemic_scleroderma)
-get_meta_by_disease(datd = Vasculitis)
-
-
 
 ##============================================================================
 ##=================Random Effects All Diseases ==============================
@@ -221,5 +175,53 @@ forest.meta(Meta_all,
             overall.hetstat = FALSE
 )
 dev.off()
+
+
+
+##============================================================================
+##=================Random Effects Model by Disease ===========================
+##============================================================================
+library(stringr)
+get_meta_by_disease <- function (datd) {
+  Meta_disease <- metabin(data = datd,
+                          event.e = Events_E, n.e = Included_E, 
+                          event.c = Events_C, n.c = Included_C,  
+                          studlab= ID_study, sm="RR", 
+                          method="MH",  common = FALSE, random = TRUE, 
+                          label.e = "Exposed", label.c = "Non-Exposed")
+  size_plot <- length(datd$ID_study)
+  title_plot <- str_wrap(unique(datd$Outcome_ag), 20)
+  print(title_plot)
+  png(paste0("results/Meta-",title_plot, ".png"), width = 600*2, height = 110*size_plot, 
+      units = "px", res = 100)  
+  forest.meta(x = Meta_disease,  
+              col.square = "grey60", 
+              col.square.lines = "black",
+              col.diamond = "steelblue",
+              header.line = "both",
+              fontsize = 15,
+              xlim = c(0.2, 10),
+              # label.right = "Risk Factor",
+              # label.left =  "Protector Factor",
+              smlab = title_plot)
+  dev.off()
+  
+}
+
+
+get_meta_by_disease(datd = Behcet)
+get_meta_by_disease(datd = DMT1)
+get_meta_by_disease(datd = DMT1PP)
+get_meta_by_disease(datd = IBD)
+get_meta_by_disease(datd = Guillain_Barré)
+get_meta_by_disease(datd = Polymyalgia)
+get_meta_by_disease(datd = Psoriasis)
+get_meta_by_disease(datd = RA)
+get_meta_by_disease(datd = SLE)
+get_meta_by_disease(datd = Sjögrens)
+get_meta_by_disease(datd = Spondyloarthritis)
+get_meta_by_disease(datd = Systemic_scleroderma)
+get_meta_by_disease(datd = Vasculitis)
+
 
 
