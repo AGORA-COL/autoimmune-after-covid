@@ -139,40 +139,50 @@ udat <- rbind(Spondyloarthritis,
               Vasculitis,
               RA) %>% arrange(Outcome_ag)
 
-Meta_all <- metabin(Events_E, Included_E, Events_C, Included_C, data=udat,
+Meta_all <- metabin(event.e = Events_E, n.e = Included_E, 
+                    event.c = Events_C, n.c = Included_C, data=udat,
                     studlab= ID_study, subgroup = Outcome_ag, sm="RR",
                     method="MH",  common = FALSE, random = TRUE,
-                    label.e = "Exposed", label.c = "Non-Exposed",
+                    label.e = "SARS-CoV-2\nExposed", label.c = "SARS-CoV-2\nNon-Exposed",
+                    label.left = "New Onset",
+                    label.right = "Total\nIncluded"
                     print.subgroup.name = FALSE,
                     label.right = ""
 )
 
 
-png("results/Meta-All-Diseases.png", width = 600*2, height = 1000*2,
-    units = "px", res = 100)  
+png("results/Meta-All-Diseases.png", width = 600*8, height = 1000*6,
+    units = "px", res = 300)  
 
 forest.meta(Meta_all,
-            col.square = "grey50",
+            layout = "meta",
+            col.study = "darkred",
+            col.inside = "darkred",
+            col.square = "#fccde5",
             col.square.lines = "black",
             col.diamond = "steelblue",
             col.subgroup = "black",
             header.line = "both",
-            # weight = "random",
+            lwd = 3,
             fs.heading = 16,
             fs.smlab = 16,
             fs.random = 14,
             ff.random  = "plain",
             fs.axis = 14,
             cex = 24,
-            xlim = c(0.2, 10),
+            xlim = c(0.1, 10),
             label.right = "Risk Factor",
             label.left =  "Protector Factor",
             fs.lr = 14,
             print.I2.ci = TRUE,
-            # layout = "RevMan5",
             test.subgroup.random = FALSE,
             overall=FALSE,
-            overall.hetstat = FALSE
+            overall.hetstat = FALSE,
+            colgap.left = "1.5 cm",
+            colgap.right = "0.5 cm",
+            colgap.forest.left = "0.5 cm",
+            colgap.forest.right =  "0.5 cm",
+            just = "right"
 )
 dev.off()
 
@@ -190,6 +200,7 @@ get_meta_by_disease <- function (datd) {
                           method="MH",  common = FALSE, random = TRUE, 
                           label.e = "Exposed", label.c = "Non-Exposed")
   size_plot <- length(datd$ID_study)
+  if (size_plot == 3) size_plot <- 2.5
   title_plot <- str_wrap(unique(datd$Outcome_ag), 20)
   print(title_plot)
   png(paste0("results/Meta-",title_plot, ".png"), width = 600*2, height = 110*size_plot, 
@@ -222,6 +233,39 @@ get_meta_by_disease(datd = Sjögrens)
 get_meta_by_disease(datd = Spondyloarthritis)
 get_meta_by_disease(datd = Systemic_scleroderma)
 get_meta_by_disease(datd = Vasculitis)
+
+
+library(magick)
+p1 <- image_read("results/Meta-Behcet’s disease.png")
+p2 <- image_read("results/Meta-Guillain-Barré
+syndrome.png")
+p3<- image_read("results/Meta-Inflammatory bowel
+disease.png")
+p4 <- image_read("results/Meta-Polymyalgia
+rheumatica.png")
+p5 <- image_read("results/Meta-Psoriasis.png")
+p6 <- image_read("results/Meta-Rheumatoid arthritis.png")
+p7 <- image_read("results/Meta-Sjögren's syndrome.png")
+p8 <- image_read("results/Meta-Spondyloarthritis.png")
+p9 <- image_read("results/Meta-Systemic lupus
+erythematosus.png")
+p10 <- image_read("results/Meta-Systemic sclerosis.png")
+p11 <- image_read("results/Meta-Type 1 diabetes
+mellitus (Pediatric).png")
+p12 <- image_read("results/Meta-Type 1 diabetes
+mellitus.png")
+p13 <- image_read("results/Meta-Vasculitis.png")
+
+combined_imageA <- image_append(c(p1, p2, p3, p4, p5, p6, p7), stack = TRUE)
+combined_imageB <- image_append(c(p8, p9, p10, p11, p12, p13), stack = TRUE)
+image_write(combined_imageA, "results/Meta-A.png", density = 1)
+image_write(combined_imageB, "results/Meta-B.png", density = 1)
+
+pA <- image_read("results/Meta-A.png")
+pB <- image_read("results/Meta-B.png")
+combined_AB <- image_append(c(pA, pB), stack = FALSE)
+image_write(combined_AB, "results/Meta-AB.png", density = 1)
+
 
 
 
