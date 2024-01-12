@@ -183,7 +183,7 @@ udat <- rbind(Spondyloarthritis,
               Psoriasis,
               Sjögrens,
               Vasculitis,
-              RA)
+              RA) %>% arrange(Outcome_ag)
 
 Meta_all <- metabin(Events_E, Included_E, Events_C, Included_C, data=udat,
                     studlab= ID_study, subgroup = Outcome_ag, sm="RR",
